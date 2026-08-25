@@ -26,10 +26,10 @@
     "@angular/forms": "*",
     "rxjs": "*",
     "tabby-core": "*",
-    "typescript": "*",
-    "webpack": "*",
-    "webpack-cli": "*",
-    "ts-loader": "*"
+    "typescript": "~5.4.5",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4",
+    "ts-loader": "^9.5.1"
   },
   "peerDependencies": {
     "tabby-core": "*"
