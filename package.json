@@ -1,0 +1,37 @@
+{
+  "name": "tabby-mru",
+  "version": "1.0.0",
+  "description": "Browser-style Most-Recently-Used (MRU) tab switching for Tabby terminal",
+  "keywords": [
+    "tabby-plugin"
+  ],
+  "author": "f4ww4z",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/f4ww4z/tabby-mru.git"
+  },
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch"
+  },
+  "devDependencies": {
+    "@angular/common": "*",
+    "@angular/core": "*",
+    "@angular/forms": "*",
+    "rxjs": "*",
+    "tabby-core": "*",
+    "typescript": "*",
+    "webpack": "*",
+    "webpack-cli": "*",
+    "ts-loader": "*"
+  },
+  "peerDependencies": {
+    "tabby-core": "*"
+  }
+}
