@@ -1,7 +1,7 @@
 module.exports = {
     mode: 'production',
     devtool: 'source-map',
-    entry: 'index.ts',
+    entry: './index.ts',
     context: __dirname + '/src',
     output: {
         path: __dirname + '/dist',
