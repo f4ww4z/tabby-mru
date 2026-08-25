@@ -21,15 +21,15 @@
     "watch": "webpack --watch"
   },
   "devDependencies": {
-    "@angular/common": "*",
-    "@angular/core": "*",
-    "@angular/forms": "*",
-    "rxjs": "*",
+    "@angular/common": "^15.0.0",
+    "@angular/core": "^15.0.0",
+    "@angular/forms": "^15.0.0",
+    "rxjs": "^7.0.0",
     "tabby-core": "*",
-    "typescript": "~5.4.5",
+    "ts-loader": "^9.5.1",
+    "typescript": "~5.5.0",
     "webpack": "^5.91.0",
-    "webpack-cli": "^5.1.4",
-    "ts-loader": "^9.5.1"
+    "webpack-cli": "^5.1.4"
   },
   "peerDependencies": {
     "tabby-core": "*"
