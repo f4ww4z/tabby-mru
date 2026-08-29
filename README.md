@@ -1,22 +1,39 @@
 # tabby-mru
 
-Browser-style **Most Recently Used (MRU)** tab switching for the [Tabby terminal](https://tabby.sh).
+![Preview](mru-preview.gif)
 
-Tabby ships a built-in `toggle-last-tab` action, but it only swaps between the
-current tab and the *one* previously active tab. This plugin keeps a full MRU
-stack: holding a hotkey and pressing it repeatedly cycles further back through
-your tab history — just like `Ctrl+Tab` in a browser — then commits the pick
-to the front of the stack once you stop pressing it.
+Browser-style **Most Recently Used (MRU)** tab switching for the [Tabby terminal](https://tabby.sh), with a visual popup.
 
-## What it adds
+Hold `Ctrl` and press `Tab` to cycle through your recent tabs — a centered popup
+shows the list, and releasing `Ctrl` commits the selection. Just like Chrome, Edge,
+or Firefox.
 
-Two new hotkey actions, unbound by default, under **Settings > Hotkeys**:
+## How it works
 
-- Switch to next tab in MRU order (`mru-next`)
-- Switch to previous tab in MRU order (`mru-previous`)
+1. **Hold `Ctrl` + press `Tab`** — a "Recent tabs" popup appears, highlighting the
+   most recently used tab.
+2. **Keep pressing `Tab` (still holding `Ctrl`)** — the highlight advances through
+   the MRU list. Each press cycles one step forward, wrapping around.
+3. **Release `Ctrl`** — the highlighted tab is selected instantly. No delay.
+4. **Press `Escape`** while cycling — cancels and returns to the original tab.
 
-Bind them to whatever you like — `Ctrl-Tab` / `Ctrl-Shift-Tab` is the most
-browser-like choice.
+## Important: Hotkey conflict avoidance
+
+> **Do NOT bind `Ctrl+Tab` or `Ctrl+Shift+Tab` to any action in Tabby's
+> Settings > Hotkeys.** This plugin intercepts `Ctrl+Tab` directly at the
+> document level. If you also bind it in Tabby's settings, the two will
+> conflict and behaviour will be unpredictable.
+
+## Configuration
+
+You can customise the maximum number of tabs shown in the popup by adding
+this to your Tabby config file (`%APPDATA%\tabby\config.yaml` on Windows,
+`~/.config/tabby/config.yaml` on Linux, or `~/Library/Application Support/tabby/config.yaml` on macOS):
+
+```yaml
+mru:
+  maxEntries: 8   # default is 10
+```
 
 ## Project layout
 
@@ -26,10 +43,10 @@ tabby-mru/
 ├── tsconfig.json
 ├── webpack.config.js
 └── src/
-    ├── index.ts        # NgModule entry point
-    ├── mru.service.ts  # MRU stack tracking + cycling logic
-    ├── hotkeys.ts       # HotkeyProvider — declares the 2 actions
-    └── config.ts        # ConfigProvider — default (empty) keybindings
+    ├── index.ts              # NgModule entry point
+    ├── mru.service.ts        # MRU stack tracking + keyboard handling + popup lifecycle
+    ├── mru-popup.component.ts # Visual popup overlay component
+    └── config.ts             # ConfigProvider — default settings
 ```
 
 ## 1. Local setup
@@ -66,10 +83,10 @@ Steps:
 2. `cp -r package.json dist ~/.config/tabby/plugins/node_modules/tabby-mru/`
 3. Fully quit and relaunch Tabby (not just close the window — plugins load at startup).
 4. Open **Settings > Plugins** and confirm `tabby-mru` shows as installed.
-5. Open **Settings > Hotkeys**, search "MRU", bind keys to both actions.
-6. Open several tabs, switch between non-adjacent ones normally, then test
-   your hotkey — it should walk backward through your actual usage order,
-   not tab-bar position.
+5. Open several tabs, switch between non-adjacent ones normally, then hold
+   `Ctrl` and press `Tab` — the popup should appear and cycle through your
+   usage order, not tab-bar position.
+6. **Make sure `Ctrl+Tab` is NOT bound to anything** in Settings > Hotkeys.
 
 While developing, run `npm run watch` and relaunch Tabby after each change —
 plugin code isn't hot-reloaded.
@@ -90,10 +107,9 @@ for the `tabby-plugin` keyword, which is already set in `package.json`.
 
 ## Notes and limitations
 
-- A cycle "commits" 600ms after your last keypress, mirroring how a browser
-  finalizes once you release the modifier key. Tune the `setTimeout` delay
-  in `mru.service.ts` if you want it snappier or more forgiving.
-- The stack is filtered against `app.tabs` on every cycle, so closed or
+- Selection is committed the instant you release the `Ctrl` key — no timers,
+  no delays, no debouncing. Press `Escape` to cancel.
+- The MRU stack is filtered against open tabs on every cycle, so closed or
   reordered tabs never produce a stale jump target.
 - This only changes keyboard-driven selection order — your tab bar layout
   and tab positions are untouched.
